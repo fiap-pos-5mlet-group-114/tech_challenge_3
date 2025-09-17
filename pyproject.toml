@@ -6,7 +6,25 @@ dependencies = [
     "aiosqlite>=0.21.0",
     "fastapi>=0.116.1",
     "httpx>=0.28.1",
+    "markupsafe==2.1.5",
+    "numpy>=2.1.2",
+    "polars>=1.33.1",
     "selectolax>=0.3.34",
     "sqlalchemy[asyncio]>=2.0.43",
+    "torch>=2.8.0",
     "uvicorn>=0.35.0",
 ]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+    "rich>=14.1.0",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch" }
+
+[[tool.uv.index]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu129"
+default = false
