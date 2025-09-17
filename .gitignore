@@ -1,2 +1,6 @@
 .venv
 *.pyc
+*.csv
+*.zip
+*.db
+*.pth
