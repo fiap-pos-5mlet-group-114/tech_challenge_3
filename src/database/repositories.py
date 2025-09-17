@@ -8,6 +8,10 @@ from src.database import async_session
 class BaseRepo[T]:
     session: AsyncSession
 
+    def __init__(self, session: AsyncSession | None = None):
+        if session is not None:
+            self.session = session
+
     async def __aenter__(self):
         a_session = async_session()
         self.session = a_session
