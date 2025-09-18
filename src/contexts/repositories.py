@@ -2,7 +2,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 
-from src.contexts.tables import Dataset, Model, TrainingHistory
+from src.contexts.tables import Model, TrainingHistory
 from src.database.repositories import BaseRepo
 
 
@@ -22,11 +22,3 @@ class ModelRepo(BaseRepo[Model]):
 
     async def get_by_id(self, id_: UUID):
         return await self.session.scalar(select(Model).where(Model.id == id_))
-
-
-class DatasetRepo(BaseRepo[Dataset]):
-    async def list_all(self):
-        return list(await self.session.scalars(select(Dataset)))
-
-    async def get_by_id(self, id_: UUID):
-        return await self.session.scalar(select(Dataset).where(Dataset.id == id_))

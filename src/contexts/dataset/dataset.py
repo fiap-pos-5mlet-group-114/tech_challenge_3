@@ -7,11 +7,20 @@ class TemperatureDataset(Dataset):
     def __init__(self, csv: DataFrame) -> None:
         super().__init__()
         temp = []
-        for linha in csv.rows():
+        csv_rows = csv.select(
+            [
+                "lat",
+                "long",
+                "alt",
+                "hour",
+                "mean_temp",
+            ]
+        ).rows()
+        for linha in csv_rows:
             temp.append(linha)
         data = Tensor(temp)
-        self.data = data[:, -5:-1]
-        self.target = data[:, -1]
+        self.data = data[:, :4]
+        self.target = data[:, 4]
 
     def __len__(self):
         return self.data.shape[0]

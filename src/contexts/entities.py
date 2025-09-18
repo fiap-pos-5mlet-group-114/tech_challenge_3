@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Message(BaseModel):
@@ -19,8 +19,8 @@ class TrainingHistoryModel(BaseModel):
 class TrainingParams(BaseModel):
     dataset_id: UUID
     model_id: UUID | None
-    epochs: int = 20
-    batch_size: int = 2048
+    epochs: int = Field(default=20, ge=1, le=100)
+    batch_size: int = Field(default=2048, ge=1, le=4096)
 
 
 class PredictParams(BaseModel):

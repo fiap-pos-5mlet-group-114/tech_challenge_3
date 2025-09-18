@@ -6,13 +6,14 @@ from fastapi.routing import APIRouter
 from torch import Tensor
 
 from src.constants import MODELS_PATH
+from src.contexts.dataset.repositories import DatasetDataRepo
 from src.contexts.entities import Message, Predict, TrainingHistoryModel, TrainingParams
 from src.contexts.executors import train_model
 from src.contexts.model import TemperaturePredictor
 from src.contexts.repositories import TrainingHistoryRepo
 from src.contexts.tables import TrainingHistory
 
-router = APIRouter()
+router = APIRouter(tags=["Training"])
 
 
 @router.get("/collect-data")
@@ -31,6 +32,17 @@ async def train(params: TrainingParams):
         if await repo.get_ongoing() is not None:
             return JSONResponse(
                 status_code=406, content={"message": "Model already training!"}
+            )
+        dataset_data_repo = DatasetDataRepo(repo.session)
+        amount_of_data = await dataset_data_repo.count_all_dataset_data(
+            params.dataset_id
+        )
+        if amount_of_data is not None and amount_of_data < 5:
+            return JSONResponse(
+                status_code=406,
+                content={
+                    "message": f"Not enough samples in the dataset! {amount_of_data} out of 5 required!"
+                },
             )
         history = TrainingHistory()
         repo.add(history)

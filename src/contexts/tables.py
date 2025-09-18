@@ -62,12 +62,3 @@ class Model(UUIDTable):
         return {
             "id": self.id,
         }
-
-
-class Dataset(UUIDTable):
-    __tablename__ = "datasets"
-
-    def to_dict(self) -> dict[str, UUID]:
-        return {
-            "id": self.id,
-        }

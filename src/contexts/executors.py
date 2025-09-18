@@ -3,15 +3,16 @@ from logging import Logger
 from pathlib import Path
 from uuid import uuid4
 
-from polars import DataFrame, read_csv
+from polars import DataFrame
 from torch import nn, no_grad, optim
 from torch.utils.data import DataLoader, Subset, random_split
 
-from src.constants import DATASETS_PATH, MODELS_PATH
-from src.contexts.dataset import TemperatureDataset
+from src.constants import MODELS_PATH
+from src.contexts.dataset.dataset import TemperatureDataset
+from src.contexts.dataset.repositories import DatasetDataRepo, DatasetRepo
 from src.contexts.entities import TrainingParams
 from src.contexts.model import TemperaturePredictor
-from src.contexts.repositories import DatasetRepo, ModelRepo, TrainingHistoryRepo
+from src.contexts.repositories import ModelRepo, TrainingHistoryRepo
 from src.contexts.tables import Model
 
 
@@ -86,13 +87,19 @@ async def train_model(logger: Logger, training_params: TrainingParams):
             return
 
         dataset_repo = DatasetRepo(training_history_repo.session)
+        dataset_data_repo = DatasetDataRepo(training_history_repo.session)
         dataset_instance = await dataset_repo.get_by_id(training_params.dataset_id)
         if dataset_instance is None:
             raise ValueError(
                 f"No dataset found with the id {training_params.dataset_id}!"
             )
 
-        dataframe = read_csv(DATASETS_PATH / f"{dataset_instance.id}.csv")
+        dataset_data_list = await dataset_data_repo.get_all_by_dataset_id(
+            dataset_instance.id, limit=None, offset=None
+        )
+        dataframe = DataFrame(
+            [dataset_data.to_dict() for dataset_data in dataset_data_list]
+        )
         train_dataset, validation_dataset = create_train_validation_datasets(dataframe)
         model = TemperaturePredictor().cuda()
 

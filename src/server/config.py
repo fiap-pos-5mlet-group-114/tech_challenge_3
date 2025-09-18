@@ -5,8 +5,9 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from rich.logging import RichHandler
 
-from src.constants import ASSETS_PATH, DATASETS_PATH, MODELS_PATH
-from src.contexts.routes import router
+from src.constants import ASSETS_PATH, MODELS_PATH
+from src.contexts.dataset.routes import router as dataset_router
+from src.contexts.routes import router as main_router
 
 
 @asynccontextmanager
@@ -19,7 +20,7 @@ async def lifespan(app: FastAPI):
         datefmt="[%X]",
         handlers=[RichHandler()],
     )
-    for path in (ASSETS_PATH, MODELS_PATH, DATASETS_PATH):
+    for path in (ASSETS_PATH, MODELS_PATH):
         path.mkdir(exist_ok=True, parents=True)
 
     await create_tables()
@@ -34,4 +35,5 @@ def home():
     return RedirectResponse("/docs")
 
 
-app.include_router(router, prefix="/api")
+app.include_router(main_router, prefix="/api")
+app.include_router(dataset_router, prefix="/api")
