@@ -40,7 +40,7 @@ While developing this project I've got into some problems both related to the da
 
 ### Talking about the data
 
-The fist thing was the the data sources file were not even and csv(even though it's extracted from their zip file as that), the types were either wrong or badly formatted(in case of floats), so one of the things that took way much time than I was expecting was fixing these. The zip contains data from months and states with each line being an hour, so, it's needed to merge all of them into a single file to better use it later.
+The fist thing was that the data sources file were not even and csv(even though it's extracted from their zip file as that), the types were either wrong or badly formatted(in case of floats), so one of the things that took way much time than I was expecting was fixing these. The zip contains data from months and states with each line being an hour, so, it's needed to merge all of them into a single file to better use it later.
 
 While only having the csv would be enough I wanted to make possible to use an API to create datasets and train the model with different datasets, so I build an script to populate an sql database with the data from the said csv containing all the data from the months and states.
 
