@@ -10,20 +10,24 @@ from src.contexts.dataset.repositories import DatasetDataRepo
 from src.contexts.model import TemperaturePredictor
 from src.contexts.model.entities import (
     Message,
+    Model,
     Predict,
     TrainingHistoryModel,
     TrainingParams,
 )
 from src.contexts.model.executors import train_model
-from src.contexts.model.repositories import TrainingHistoryRepo
+from src.contexts.model.repositories import ModelRepo, TrainingHistoryRepo
 from src.contexts.model.tables import TrainingHistory
 
 router = APIRouter(tags=["Training"])
 
 
-@router.get("/collect-data")
-async def collect_data():
-    pass
+@router.get("/models", response_model=list[Model])
+async def list_models():
+    async with ModelRepo() as repo:
+        models = await repo.list_all()
+
+    return [model.to_dict() for model in models]
 
 
 @router.post(

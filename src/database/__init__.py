@@ -18,7 +18,10 @@ def create_models_from_files(session: AsyncSession):
         if is_uuid(file_name):
             continue
         file_uuid = uuid4()
-        instance = Model(id=file_uuid)
+        instance = Model(
+            id=file_uuid,
+            description=f'Model with file name "{file.stem}" loaded from system',
+        )
         models.append(instance)
         file.rename(file.parent / f"{instance.id}.pth")
 

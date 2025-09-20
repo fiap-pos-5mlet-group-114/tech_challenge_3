@@ -35,3 +35,8 @@ class PredictParams(BaseModel):
 class Predict(BaseModel):
     model_id: UUID
     params: list[PredictParams]
+
+
+class Model(BaseModel):
+    id: UUID
+    description: str | None

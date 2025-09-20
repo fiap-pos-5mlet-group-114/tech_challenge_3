@@ -58,7 +58,7 @@ class TrainingHistory(UUIDTable):
 class Model(UUIDTable):
     __tablename__ = "models"
 
-    def to_dict(self) -> dict[str, UUID]:
-        return {
-            "id": self.id,
-        }
+    description: Mapped[str | None]
+
+    def to_dict(self) -> dict[str, UUID | str | None]:
+        return {"id": self.id, "description": self.description}
