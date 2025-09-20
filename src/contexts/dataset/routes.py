@@ -77,6 +77,8 @@ async def add_data(dataset_id: UUID, params: CreateDataModel):
         long=params.long,
         alt=params.alt,
         hour=params.hour,
+        month=params.month,
+        day=params.day,
         mean_temp=params.mean_temp,
     )
     async with DatasetDataRepo() as repo:

@@ -13,7 +13,7 @@ def create_models_from_files(session: AsyncSession):
     from src.contexts.tables import Model
 
     models: list[Model] = []
-    for file in MODELS_PATH.iterdir():
+    for file in MODELS_PATH.glob("*.pth"):
         file_name = file.stem
         if is_uuid(file_name):
             continue

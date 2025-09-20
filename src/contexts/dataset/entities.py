@@ -18,17 +18,14 @@ class CreateDataModel(BaseModel):
     long: float
     alt: float
     hour: int
+    month: int
+    day: int
     mean_temp: float
 
 
-class DataModel(BaseModel):
+class DataModel(CreateDataModel):
     id: UUID
     dataset_id: UUID
-    lat: float
-    long: float
-    alt: float
-    hour: int
-    mean_temp: float
 
 
 class UpdateDataModel(BaseModel):
@@ -37,4 +34,6 @@ class UpdateDataModel(BaseModel):
     long: float | None
     alt: float | None
     hour: int | None
+    month: int | None
+    day: int | None
     mean_temp: float | None

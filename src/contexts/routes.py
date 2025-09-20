@@ -75,14 +75,12 @@ async def predict(predict_params: Predict):
     model = TemperaturePredictor().cuda().eval()
     model.load(MODELS_PATH / f"{predict_params.model_id}.pth")
 
-    pred: Tensor = model(
+    preds: Tensor = model(
         Tensor(
             [
-                [param.lat, param.long, param.alt, param.hour]
+                [param.lat, param.long, param.alt, param.hour, param.month, param.day]
                 for param in predict_params.params
             ]
-        )
-        .unsqueeze(0)
-        .cuda()
+        ).cuda()
     )
-    return {"mean_temp": pred.squeeze(0).detach().item()}
+    return [{"mean_temp": pred.detach().item()} for pred in preds]

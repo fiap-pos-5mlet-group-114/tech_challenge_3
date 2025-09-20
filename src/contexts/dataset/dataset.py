@@ -13,14 +13,16 @@ class TemperatureDataset(Dataset):
                 "long",
                 "alt",
                 "hour",
+                "month",
+                "day",
                 "mean_temp",
             ]
         ).rows()
         for linha in csv_rows:
             temp.append(linha)
         data = Tensor(temp)
-        self.data = data[:, :4]
-        self.target = data[:, 4]
+        self.data = data[:, :-1]
+        self.target = data[:, -1]
 
     def __len__(self):
         return self.data.shape[0]

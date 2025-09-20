@@ -24,6 +24,8 @@ class DatasetData(UUIDTable):
     long: Mapped[float]
     alt: Mapped[float]
     hour: Mapped[int]
+    month: Mapped[int]
+    day: Mapped[int]
     mean_temp: Mapped[float]
 
     def to_dict(self) -> dict[str, UUID | int | float]:
@@ -34,5 +36,7 @@ class DatasetData(UUIDTable):
             "long": self.long,
             "alt": self.alt,
             "hour": self.hour,
+            "month": self.month,
+            "day": self.day,
             "mean_temp": self.mean_temp,
         }

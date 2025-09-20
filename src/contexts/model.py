@@ -8,7 +8,7 @@ class TemperaturePredictor(nn.Module):
         super().__init__()
 
         self.net = nn.Sequential(
-            nn.Linear(4, 64),
+            nn.Linear(6, 64),
             nn.ReLU(),
             nn.Linear(64, 64),
             nn.ReLU(),

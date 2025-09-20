@@ -28,6 +28,8 @@ class PredictParams(BaseModel):
     long: float
     alt: float
     hour: int
+    month: int
+    day: int
 
 
 class Predict(BaseModel):
