@@ -10,7 +10,7 @@ async_session = async_sessionmaker(engine, autoflush=True)
 
 
 def create_models_from_files(session: AsyncSession):
-    from src.contexts.tables import Model
+    from src.contexts.model.tables import Model
 
     models: list[Model] = []
     for file in MODELS_PATH.glob("*.pth"):
@@ -27,7 +27,7 @@ def create_models_from_files(session: AsyncSession):
 
 async def create_tables():
     from src.contexts.dataset.tables import Dataset, DatasetData
-    from src.contexts.tables import Model, TrainingHistory
+    from src.contexts.model.tables import Model, TrainingHistory
     from src.database.tables import Base
 
     async with engine.begin() as conn:

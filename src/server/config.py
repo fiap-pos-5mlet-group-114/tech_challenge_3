@@ -7,7 +7,7 @@ from rich.logging import RichHandler
 
 from src.constants import ASSETS_PATH, MODELS_PATH
 from src.contexts.dataset.routes import router as dataset_router
-from src.contexts.routes import router as main_router
+from src.contexts.model.routes import router as main_router
 
 
 @asynccontextmanager

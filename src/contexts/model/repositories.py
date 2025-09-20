@@ -2,7 +2,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 
-from src.contexts.tables import Model, TrainingHistory
+from src.contexts.model.tables import Model, TrainingHistory
 from src.database.repositories import BaseRepo
 
 

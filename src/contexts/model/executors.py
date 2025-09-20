@@ -1,23 +1,22 @@
 from datetime import datetime, timezone
 from logging import Logger
 from pathlib import Path
-from uuid import uuid4
+from uuid import UUID, uuid4
 
-from polars import DataFrame
 from torch import nn, no_grad, optim
 from torch.utils.data import DataLoader, Subset, random_split
 
 from src.constants import MODELS_PATH
-from src.contexts.dataset.dataset import TemperatureDataset
+from src.contexts.dataset import TemperatureDataset
 from src.contexts.dataset.repositories import DatasetDataRepo, DatasetRepo
-from src.contexts.entities import TrainingParams
 from src.contexts.model import TemperaturePredictor
-from src.contexts.repositories import ModelRepo, TrainingHistoryRepo
-from src.contexts.tables import Model
+from src.contexts.model.entities import TrainingParams
+from src.contexts.model.repositories import ModelRepo, TrainingHistoryRepo
+from src.contexts.model.tables import Model
 
 
-def create_train_validation_datasets(dataframe: DataFrame):
-    dados = TemperatureDataset(dataframe)
+def create_train_validation_datasets(data: list[dict[str, UUID | int | float]]):
+    dados = TemperatureDataset(data)
     return random_split(dados, [0.8, 0.2])
 
 
@@ -97,10 +96,9 @@ async def train_model(logger: Logger, training_params: TrainingParams):
         dataset_data_list = await dataset_data_repo.get_all_by_dataset_id(
             dataset_instance.id, limit=None, offset=None
         )
-        dataframe = DataFrame(
-            [dataset_data.to_dict() for dataset_data in dataset_data_list]
-        )
-        train_dataset, validation_dataset = create_train_validation_datasets(dataframe)
+        data = [dataset_data.to_dict() for dataset_data in dataset_data_list]
+
+        train_dataset, validation_dataset = create_train_validation_datasets(data)
         model = TemperaturePredictor().cuda()
 
         model_repo = ModelRepo(training_history_repo.session)

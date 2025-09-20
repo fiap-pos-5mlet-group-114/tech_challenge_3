@@ -7,11 +7,16 @@ from torch import Tensor
 
 from src.constants import MODELS_PATH
 from src.contexts.dataset.repositories import DatasetDataRepo
-from src.contexts.entities import Message, Predict, TrainingHistoryModel, TrainingParams
-from src.contexts.executors import train_model
 from src.contexts.model import TemperaturePredictor
-from src.contexts.repositories import TrainingHistoryRepo
-from src.contexts.tables import TrainingHistory
+from src.contexts.model.entities import (
+    Message,
+    Predict,
+    TrainingHistoryModel,
+    TrainingParams,
+)
+from src.contexts.model.executors import train_model
+from src.contexts.model.repositories import TrainingHistoryRepo
+from src.contexts.model.tables import TrainingHistory
 
 router = APIRouter(tags=["Training"])
 
