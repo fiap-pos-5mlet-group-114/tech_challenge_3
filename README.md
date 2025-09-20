@@ -23,8 +23,16 @@ First of all, to better better control the env and required libraries I used [uv
 
 After cloning the repo, run the following in your preferred terminal:
 
-1. `uv sync --no-dev --extra gpu` to create the environment with all non dev required libs (remove the `--no-dev` to be able to run the non api scripts for both downloading the pre-trained model and the scripts for downloading and loading the dataset into the sql); change the `gpu` to `cpu` if your machine does not have a gpu accelerator(e.g. nvidia graphics card)
-2. `uv run uvicorn src.server.config:app` to run the project api
+1. `uv sync --no-dev --extra gpu`: to create the environment with all non dev required libs (remove the `--no-dev` to be able to run the non api scripts for both downloading the pre-trained model and the scripts for downloading and loading the dataset into the sql); change the `gpu` to `cpu` if your machine does not have a gpu accelerator(e.g. nvidia graphics card)
+2. `uv run uvicorn src.server.config:app`: to run the project api
+
+## Scripts
+
+Three scripts are included in the project, one to download the dataset directly from the data source and transform it, one to load it into the sql table and one to download the pretrained model, you can run each of them with the following commands.
+
+1. `uv run typer .\src\scripts\build_csv.py run 2024`: where `2024` is the year of the data you want to download, this one can take some time to process as the data for an year is about 3 million lines.
+2. `uv run typer .\src\scripts\create_ds.py run 2024`: where `2024` is the year of the data you want to use, this one can take some time to process as the data for an year is about 3 million lines.
+3. `uv run typer .\src\scripts\download_pretrained_model.py run`: you can pass the model name with the param `--model_slug model` if you want any specific model. If any new models are uploaded, you can find them on the [huggingface repo](https://huggingface.co/Nephilim/temperature_predictor)
 
 ## Development Process
 
