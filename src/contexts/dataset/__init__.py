@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 class TemperatureDataset(Dataset):
     def __init__(self, data: list[dict[str, UUID | int | float]]) -> None:
         super().__init__()
-        data_rows: list[tuple[int | float]] = [
+        data_rows: list[tuple[int | float]] = [  # type: ignore
             (
                 row["lat"],
                 row["long"],
@@ -18,7 +18,7 @@ class TemperatureDataset(Dataset):
                 row["mean_temp"],
             )
             for row in data
-        ]  # type: ignore
+        ]
         tensor = Tensor(data_rows)
         self.data = tensor[:, :-1]
         self.target = tensor[:, -1]

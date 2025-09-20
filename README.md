@@ -23,7 +23,7 @@ First of all, to better better control the env and required libraries I used [uv
 
 After cloning the repo, run the following in your preferred terminal:
 
-1. `uv sync --no-dev` to create the environment with all non dev required libs
+1. `uv sync --no-dev --extra gpu` to create the environment with all non dev required libs (remove the `--no-dev` to be able to run the non api scripts for both downloading the pre-trained model and the scripts for downloading and loading the dataset into the sql); change the `gpu` to `cpu` if your machine does not have a gpu accelerator(e.g. nvidia graphics card)
 2. `uv run uvicorn src.server.config:app` to run the project api
 
 ## Development Process
