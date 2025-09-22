@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
 from torch import Tensor
 
-from src.constants import MODELS_PATH
+from src.constants import DEVICE, MODELS_PATH
 from src.contexts.dataset.repositories import DatasetDataRepo
 from src.contexts.model import TemperaturePredictor
 from src.contexts.model.entities import (
@@ -81,7 +81,7 @@ async def training_history():
 
 @router.post("/predict")
 async def predict(predict_params: Predict):
-    model = TemperaturePredictor().cuda().eval()
+    model = TemperaturePredictor().to(DEVICE).eval()
     model.load(MODELS_PATH / f"{predict_params.model_id}.pth")
 
     preds: Tensor = model(
@@ -90,6 +90,6 @@ async def predict(predict_params: Predict):
                 [param.lat, param.long, param.alt, param.hour, param.month, param.day]
                 for param in predict_params.params
             ]
-        ).cuda()
+        ).to(DEVICE)
     )
     return [{"mean_temp": pred.detach().item()} for pred in preds]

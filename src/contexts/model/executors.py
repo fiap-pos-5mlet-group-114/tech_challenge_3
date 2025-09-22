@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 from torch import nn, no_grad, optim
 from torch.utils.data import DataLoader, Subset, random_split
 
-from src.constants import MODELS_PATH
+from src.constants import DEVICE, MODELS_PATH
 from src.contexts.dataset import TemperatureDataset
 from src.contexts.dataset.repositories import DatasetDataRepo, DatasetRepo
 from src.contexts.model import TemperaturePredictor
@@ -29,7 +29,7 @@ def train(
     epochs: int = 20,
     batch_size: int = 2048,
 ):
-    criterion = nn.MSELoss().cuda()
+    criterion = nn.MSELoss().to(DEVICE)
     optimizer = optim.AdamW(model.parameters())
     train_data_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     validation_data_loader = DataLoader(
@@ -45,7 +45,7 @@ def train(
         validation_losses: list[float] = []
 
         for data, target in train_data_loader:
-            data, target = data.cuda(), target.unsqueeze(1).cuda()
+            data, target = data.to(DEVICE), target.unsqueeze(1).to(DEVICE)
 
             optimizer.zero_grad()
             target_pred = model(data)
@@ -60,7 +60,7 @@ def train(
         model.eval()
         with no_grad():
             for data, target in validation_data_loader:
-                data, target = data.cuda(), target.unsqueeze(1).cuda()
+                data, target = data.to(DEVICE), target.unsqueeze(1).to(DEVICE)
 
                 target_pred = model(data)
                 loss = criterion(target_pred, target)
@@ -99,7 +99,7 @@ async def train_model(logger: Logger, training_params: TrainingParams):
         data = [dataset_data.to_dict() for dataset_data in dataset_data_list]
 
         train_dataset, validation_dataset = create_train_validation_datasets(data)
-        model = TemperaturePredictor().cuda()
+        model = TemperaturePredictor().to(DEVICE)
 
         model_repo = ModelRepo(training_history_repo.session)
         if training_params.model_id is not None:
