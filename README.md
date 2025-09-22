@@ -48,7 +48,7 @@ While only having the csv would be enough I wanted to make possible to use an AP
 
 If you give a quick view on the data you can see that there's way more fields that we could use in the project as input to predict the temperature, or as targets to predict. I didn't used them because i wanted to focus only on minimal data that a person can gather without the need of complex sensors, so, all the input can be simple gathered with an GPS, a clock and a calendar. As for the target, I wanted to simplify it as much as possible by predicting only one variable, that being the mean of the min and max temperature(found in the csv in different columns).
 
-The model chosen was a simple MLP with the following structure, mainly because it was easier to implement. The `Linear` being the regression function(`f(x): (x * w) + b`) and the `ReLu` the activation function(`f(x): x if x > 0 else 0`).
+The model chosen was a simple MLP with the following structure, mainly because it was easier to implement, also because of the amount of data and the difference between the data magnitude(e.g altitude ranging to thousands and hour only to 23). The `Linear` being the regression function(`f(x): (x * w) + b`) and the `ReLu` the activation function(`f(x): x if x > 0 else 0`).
 
 ```txt
 Linear(6, 64)
