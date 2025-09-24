@@ -2,7 +2,7 @@
 
 ## Project Objective
 
-The main objective of the project is to be a POC(prove of concept) on how using as minimum parameters as possible(latitude, longitude, altitude, hour, month, day) can still be viable on predicting(with regression) temperature on a certain place in the world.
+The main objective of the project is to be a POC(proof of concept) on how using as minimum parameters as possible(latitude, longitude, altitude, hour, month, day) can still be viable on predicting(with regression) temperature on a certain place in the world.
 
 ## Project Def
 
