@@ -40,3 +40,7 @@ class Predict(BaseModel):
 class Model(BaseModel):
     id: UUID
     description: str | None
+
+
+class UpdateModelParams(BaseModel):
+    description: str | None

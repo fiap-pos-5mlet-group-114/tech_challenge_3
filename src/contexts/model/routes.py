@@ -1,5 +1,6 @@
 from asyncio import get_event_loop
 from logging import getLogger
+from uuid import UUID
 
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
@@ -14,20 +15,42 @@ from src.contexts.model.entities import (
     Predict,
     TrainingHistoryModel,
     TrainingParams,
+    UpdateModelParams,
 )
 from src.contexts.model.executors import train_model
 from src.contexts.model.repositories import ModelRepo, TrainingHistoryRepo
 from src.contexts.model.tables import TrainingHistory
 
-router = APIRouter(tags=["Training"])
+router = APIRouter(prefix="/models", tags=["Model"])
 
 
-@router.get("/models", response_model=list[Model])
+@router.get("", response_model=list[Model])
 async def list_models():
     async with ModelRepo() as repo:
         models = await repo.list_all()
 
     return [model.to_dict() for model in models]
+
+
+@router.delete("/{id}", status_code=204)
+async def delete(id: UUID):
+    async with ModelRepo() as repo:
+        await repo.delete(id)
+        await repo.commit()
+
+
+@router.patch("/{id}", response_model=Model)
+async def update(id: UUID, params: UpdateModelParams):
+    async with ModelRepo() as repo:
+        model = await repo.get_by_id(id)
+        if model is None:
+            raise ValueError(f"Model with id {id} not found!")
+        model.description = params.description
+        repo.add(model)
+        await repo.commit()
+        await repo.session.refresh(model)
+
+    return model.to_dict()
 
 
 @router.post(

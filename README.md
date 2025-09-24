@@ -26,6 +26,18 @@ After cloning the repo, run the following in your preferred terminal:
 1. `uv sync --no-dev --extra gpu`: to create the environment with all non dev required libs (remove the `--no-dev` to be able to run the non api scripts for both downloading the pre-trained model and the scripts for downloading and loading the dataset into the sql); change the `gpu` to `cpu` if your machine does not have a gpu accelerator(e.g. nvidia graphics card)
 2. `uv run uvicorn src.server.config:app`: to run the project api
 
+## API
+
+The API related to the project contain 2 main modules, `model` and `dataset`, where the `model` module is related to both training and using the model, while the `dataset` relates to creating, and modifying the datasets used to train a model.
+
+Main routes:
+
+1. `POST /api/models/train`: train/fine-tune a given model;
+2. `POST /api/models/predict`: predict the mean temperature with a given model;
+3. `GET /api/datasets`: show all available datasets;
+4. `POST /api/datasets/{dataset_id}/data`: add data to a given dataset;
+5. `GET /api/models`: show all available models.
+
 ## Scripts
 
 Three scripts are included in the project, one to download the dataset directly from the data source and transform it, one to load it into the sql table and one to download the pretrained model, you can run each of them with the following commands.
@@ -33,6 +45,7 @@ Three scripts are included in the project, one to download the dataset directly 
 1. `uv run typer .\src\scripts\build_csv.py run 2024`: where `2024` is the year of the data you want to download, this one can take some time to process as the data for an year is about 3 million lines.
 2. `uv run typer .\src\scripts\create_ds.py run 2024`: where `2024` is the year of the data you want to use, this one can take some time to process as the data for an year is about 3 million lines.
 3. `uv run typer .\src\scripts\download_pretrained_model.py run`: you can pass the model name with the param `--model_slug model` if you want any specific model. If any new models are uploaded, you can find them on the [huggingface repo](https://huggingface.co/Nephilim/temperature_predictor)
+4. `uv run typer .\src\scripts\get_validation_metrics.py run {model_id} {dataset_id}`: use this one to generate regression metrics for a given model and dataset, both ids are the ones in the sql tables
 
 ## Development Process
 
@@ -42,13 +55,13 @@ While developing this project I've got into some problems both related to the da
 
 The fist thing was that the data sources file were not even an csv(even though it's extracted from their zip file as that), the types were either wrong or badly formatted(in case of floats), so one of the things that took way much time than I was expecting was fixing these. The zip contains data from months and states with each line being an hour, so, it's needed to merge all of them into a single file to better use it later.
 
-While only having the csv would be enough I wanted to make possible to use an API to create datasets and train the model with different datasets, so I build an script to populate an sql database with the data from the said csv containing all the data from the months and states.
+While only having the csv would be enough I wanted to make possible to use an API to create datasets and train the model with different datasets, so I've built an script to populate an sql database with the data from the said csv containing all the data from the months and states.
 
 ### Talking about the model
 
 If you give a quick view on the data you can see that there's way more fields that we could use in the project as input to predict the temperature, or as targets to predict. I didn't used them because i wanted to focus only on minimal data that a person can gather without the need of complex sensors, so, all the input can be simple gathered with an GPS, a clock and a calendar. As for the target, I wanted to simplify it as much as possible by predicting only one variable, that being the mean of the min and max temperature(found in the csv in different columns).
 
-The model chosen was a simple MLP with the following structure, mainly because it was easier to implement, also because of the amount of data and the difference between the data magnitude(e.g altitude ranging to thousands and hour only to 23). The `Linear` being the regression function(`f(x): (x * w) + b`) and the `ReLu` the activation function(`f(x): x if x > 0 else 0`).
+The model chosen was a simple MLP with the following structure, mainly because the amount of data and it was easier to implement on my side. The `Linear` being the regression function(`f(x): (x * w) + b`) and the `ReLu` the activation function(`f(x): x if x > 0 else 0`).
 
 ```txt
 Linear(6, 64)

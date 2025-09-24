@@ -22,6 +22,7 @@ dev = [
     "mypy>=1.18.2",
     "polars>=1.33.1",
     "ruff>=0.13.1",
+    "torchmetrics>=1.8.2",
     "typer>=0.19.1",
     "types-aiofiles>=24.1.0.20250822",
 ]

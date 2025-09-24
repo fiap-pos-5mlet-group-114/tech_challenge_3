@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 
 from src.contexts.model.tables import Model, TrainingHistory
 from src.database.repositories import BaseRepo
@@ -22,3 +22,6 @@ class ModelRepo(BaseRepo[Model]):
 
     async def get_by_id(self, id_: UUID):
         return await self.session.scalar(select(Model).where(Model.id == id_))
+
+    async def delete(self, id_: UUID):
+        await self.session.execute(delete(Model).where(Model.id == id_))

@@ -17,7 +17,7 @@ from src.contexts.dataset.tables import Dataset, DatasetData
 router = APIRouter(prefix="/datasets", tags=["Dataset"])
 
 
-@router.get("/", response_model=list[DatasetModel])
+@router.get("", response_model=list[DatasetModel])
 async def get_all():
     async with DatasetRepo() as repo:
         datasets = await repo.list_all()
@@ -25,7 +25,7 @@ async def get_all():
     return [dataset.to_dict() for dataset in datasets]
 
 
-@router.post("/", status_code=201, response_model=DatasetModel)
+@router.post("", status_code=201, response_model=DatasetModel)
 async def create(params: CreateUpdateDatasetModel):
     dataset = Dataset(description=params.description)
     async with DatasetRepo() as repo:
@@ -36,7 +36,7 @@ async def create(params: CreateUpdateDatasetModel):
     return dataset.to_dict()
 
 
-@router.patch("/{id}", status_code=201, response_model=DatasetModel)
+@router.patch("/{id}", response_model=DatasetModel)
 async def update(id: UUID, params: CreateUpdateDatasetModel):
     async with DatasetRepo() as repo:
         dataset = await repo.get_by_id(id)
